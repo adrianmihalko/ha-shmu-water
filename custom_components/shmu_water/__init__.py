@@ -61,6 +61,11 @@ class SHMUWaterDataUpdateCoordinator(DataUpdateCoordinator):
         try:
             data = await self._api.fetch_station_data()
 
+            # Fetch water temperature from station page (best-effort)
+            temp_data = await self._api.fetch_water_temperature()
+            data["water_temperature_c"] = temp_data.get("water_temperature_c")
+            data["temperature_time"] = temp_data.get("temperature_time")
+
             # Update stored metadata on first successful fetch
             if not self.station_name and data.get("station_name"):
                 self.station_name = data["station_name"]

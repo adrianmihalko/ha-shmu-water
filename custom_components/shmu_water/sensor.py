@@ -186,6 +186,52 @@ class SHMUWaterForecastSensor(CoordinatorEntity, SensorEntity):
         return self.coordinator.data.get("has_forecast", False)
 
 
+class SHMUWaterTemperatureSensor(CoordinatorEntity, SensorEntity):
+    """Sensor showing water temperature in °C."""
+
+    def __init__(self, coordinator, entry_id: str):
+        """Initialize the temperature sensor."""
+        super().__init__(coordinator)
+        self._entry_id = entry_id
+        self._attr_unique_id = f"{DOMAIN}_water_temperature_{entry_id}"
+        self._attr_name = "SHMU Water Temperature"
+        self._attr_native_unit_of_measurement = "°C"
+        self._attr_device_class = SensorDeviceClass.TEMPERATURE
+        self._attr_state_class = SensorStateClass.MEASUREMENT
+
+        station_id = coordinator.config_entry.data.get("station_id", "")
+        station_name = coordinator.config_entry.data.get("station_name", "")
+        river = coordinator.config_entry.data.get("river", "")
+        device_name = f"SHMU Water: {station_name}" if station_name else f"SHMU Water Station {station_id}"
+        if river:
+            device_name += f" ({river})"
+
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, entry_id)},
+            name=device_name,
+            manufacturer="Slovenský hydrometeorologický ústav",
+            model="Water Level Station",
+            sw_version="1.0",
+        )
+
+    @property
+    def native_value(self):
+        """Return the water temperature in °C."""
+        return self.coordinator.data.get("water_temperature_c")
+
+    @property
+    def extra_state_attributes(self):
+        """Return temperature attributes."""
+        data = self.coordinator.data
+        if not data:
+            return {}
+
+        attrs = {}
+        if data.get("temperature_time"):
+            attrs["temperature_time"] = data["temperature_time"]
+        return attrs
+
+
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up the SHMU water sensors."""
     coordinator = hass.data[DOMAIN][config_entry.entry_id]["coordinator"]
@@ -194,6 +240,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     sensors = [
         SHMUWaterLevelSensor(coordinator, entry_id),
         SHMUWaterTrendSensor(coordinator, entry_id),
+        SHMUWaterTemperatureSensor(coordinator, entry_id),
     ]
 
     # Always add forecast sensor — it shows as unavailable if no forecast

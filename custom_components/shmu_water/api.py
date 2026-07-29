@@ -9,6 +9,7 @@ from datetime import datetime
 _LOGGER = logging.getLogger(__name__)
 
 BASE_URL = "https://www.shmu.sk"
+STATION_PAGE_URL = f"{BASE_URL}/sk/?page=1&id=hydro_vod_all"
 
 
 class SHMUWaterAPI:
@@ -265,6 +266,57 @@ class SHMUWaterAPI:
         # Sort by 'from' ascending (lower thresholds first)
         bands.sort(key=lambda b: b["from"])
         return bands
+
+    async def fetch_water_temperature(self) -> dict:
+        """Fetch water temperature from the station detail page.
+
+        Returns dict with:
+            water_temperature_c: float or None
+            temperature_time: str or None (measurement timestamp)
+        """
+        url = f"{STATION_PAGE_URL}&station_id={self._station_id}"
+
+        try:
+            connector = aiohttp.TCPConnector(ssl=self._verify_ssl)
+            async with aiohttp.ClientSession(connector=connector) as session:
+                async with async_timeout.timeout(15):
+                    async with session.get(url) as response:
+                        if response.status != 200:
+                            raise Exception(
+                                f"Error fetching station page: HTTP {response.status}"
+                            )
+                        html = await response.text()
+
+            # Extract cells with headers — first match is most recent
+            temp_match = re.search(
+                r'<td[^>]*headers="h_teplota_vody"[^>]*>([^<]+)</td>', html
+            )
+            time_match = re.search(
+                r'<td[^>]*headers="h_datum_cas"[^>]*>([^<]+)</td>', html
+            )
+
+            result = {
+                "water_temperature_c": None,
+                "temperature_time": None,
+            }
+
+            if temp_match:
+                try:
+                    result["water_temperature_c"] = float(temp_match.group(1).strip())
+                except (ValueError, TypeError):
+                    pass
+
+            if time_match:
+                result["temperature_time"] = time_match.group(1).strip()
+
+            return result
+
+        except aiohttp.ClientError as err:
+            _LOGGER.debug("Communication error fetching water temperature: %s", err)
+            return {"water_temperature_c": None, "temperature_time": None}
+        except Exception as err:
+            _LOGGER.debug("Unexpected error fetching water temperature: %s", err)
+            return {"water_temperature_c": None, "temperature_time": None}
 
     def _calculate_flood_degree(self, water_level: int, bands: list) -> int:
         """Calculate flood activity degree based on water level and plot bands.
