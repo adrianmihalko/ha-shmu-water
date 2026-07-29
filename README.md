@@ -6,6 +6,14 @@ This integration fetches water level (hydrological) data from the [Slovenský hy
 
 All data is provided by SHMU's public water monitoring portal.
 
+## Screenshots
+
+![Station selection during setup](screenshot/Screenshot%20_1.png)
+
+![Integration card in Home Assistant](screenshot/Screenshot%20_2.png)
+
+![Device with sensors and attributes](screenshot/Screenshot%20_3.png)
+
 ## Installation
 
 1. **Add this repository to HACS**:
