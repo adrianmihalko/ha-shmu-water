@@ -12,7 +12,7 @@ All data is provided by SHMU's public water monitoring portal.
 
 ![Integration card in Home Assistant](screenshot/Screenshot%20_2.png)
 
-![Device with sensors and attributes](screenshot/Screenshot%20_3.png)
+![Device with sensors and attributes](screenshot/Screenshot_3.png)
 
 ## Installation
 
