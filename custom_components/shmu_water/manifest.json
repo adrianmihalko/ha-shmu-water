@@ -1,0 +1,14 @@
+{
+  "domain": "shmu_water",
+  "name": "SHMU Water Levels",
+  "documentation": "https://github.com/adrianmihalko/ha-shmu-water/blob/main/README.md",
+  "issue_tracker": "https://github.com/adrianmihalko/ha-shmu-water/issues",
+  "codeowners": ["adrianmihalko"],
+  "version": "1.0.0",
+  "minimum_ha_version": "2026.1.0",
+  "config_flow": true,
+  "dependencies": ["http"],
+  "requirements": [],
+  "integration_type": "hub",
+  "iot_class": "cloud_polling"
+}

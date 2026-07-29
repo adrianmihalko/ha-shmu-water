@@ -1,0 +1,70 @@
+{
+  "title": {
+    "sk": "SHMU Vodné stavy",
+    "en": "SHMU Water Levels"
+  },
+  "config": {
+    "step": {
+      "user": {
+        "title": {
+          "sk": "Pridať vodomernú stanicu",
+          "en": "Add water level station"
+        },
+        "description": {
+          "sk": "Vyberte vodomernú stanicu SHMÚ na sledovanie.",
+          "en": "Select a SHMU water level station to monitor."
+        },
+        "data": {
+          "station_id": {
+            "sk": "Vodomerná stanica",
+            "en": "Water level station"
+          },
+          "scan_interval": {
+            "sk": "Interval aktualizácie (sekundy)",
+            "en": "Scan Interval (seconds)"
+          },
+          "verify_ssl": {
+            "sk": "Overovať SSL certifikáty",
+            "en": "Verify SSL Certificates"
+          }
+        }
+      }
+    },
+    "abort": {
+      "already_configured": {
+        "sk": "Táto stanica je už nakonfigurovaná.",
+        "en": "This station is already configured."
+      }
+    },
+    "error": {
+      "cannot_connect": {
+        "sk": "Nepodarilo sa pripojiť k SHMÚ. Skontrolujte pripojenie.",
+        "en": "Failed to connect to SHMU. Check your connection."
+      },
+      "no_stations": {
+        "sk": "Nepodarilo sa načítať zoznam staníc.",
+        "en": "Failed to load station list."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": {
+          "sk": "Možnosti SHMU Water Levels",
+          "en": "SHMU Water Levels Options"
+        },
+        "data": {
+          "scan_interval": {
+            "sk": "Interval aktualizácie (sekundy)",
+            "en": "Scan Interval (seconds)"
+          },
+          "verify_ssl": {
+            "sk": "Overovať SSL certifikáty",
+            "en": "Verify SSL Certificates"
+          }
+        }
+      }
+    }
+  }
+}
